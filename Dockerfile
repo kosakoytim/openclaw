@@ -34,6 +34,9 @@ ENV NODE_ENV=production
 # Allow non-root user to write temp files during runtime/tests.
 RUN chown -R node:node /app
 
+# Create .openclaw directory with correct permissions for volume mounts
+RUN mkdir -p /home/node/.openclaw && chown -R node:node /home/node/.openclaw
+
 # Security hardening: Run as non-root user
 # The node:22-bookworm image includes a 'node' user (uid 1000)
 # This reduces the attack surface by preventing container escape via root privileges
