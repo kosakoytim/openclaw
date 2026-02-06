@@ -286,15 +286,21 @@ export async function launchOpenClawChrome(
     log.warn(`openclaw browser clean-exit prefs failed: ${String(err)}`);
   }
 
-  // Remove stale SingletonLock file that prevents Chrome from starting
-  const lockFile = path.join(userDataDir, "SingletonLock");
-  try {
-    if (fs.existsSync(lockFile)) {
-      fs.unlinkSync(lockFile);
-      log.debug(`Removed stale SingletonLock file: ${lockFile}`);
+  // Remove stale Chrome singleton files that prevent Chrome from starting
+  // These can be left behind when containers are recreated or Chrome crashes
+  const singletonFiles = ["SingletonLock", "SingletonCookie", "SingletonSocket"];
+  for (const filename of singletonFiles) {
+    const filepath = path.join(userDataDir, filename);
+    try {
+      if (fs.existsSync(filepath)) {
+        // Use lstat to detect symlinks, then unlink regardless of type
+        const stats = fs.lstatSync(filepath);
+        fs.unlinkSync(filepath);
+        log.debug(`Removed stale ${stats.isSymbolicLink() ? "symlink" : "file"}: ${filename}`);
+      }
+    } catch (err) {
+      log.warn(`Failed to remove ${filename}: ${String(err)}`);
     }
-  } catch (err) {
-    log.warn(`Failed to remove SingletonLock: ${String(err)}`);
   }
 
   const proc = spawnOnce();
