@@ -51,8 +51,8 @@ RUN OPENCLAW_A2UI_SKIP_MISSING=1 pnpm build
 ENV OPENCLAW_PREFER_PNPM=1
 RUN pnpm ui:build
 
-# Install Playwright Chromium browser
-RUN npx playwright install chromium --with-deps
+# Install Playwright Chromium browser (using the installed playwright-core from node_modules)
+RUN node node_modules/playwright-core/cli.js install chromium
 
 ENV NODE_ENV=production
 
