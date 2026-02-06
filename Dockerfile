@@ -69,6 +69,9 @@ USER node
 ENV PLAYWRIGHT_BROWSERS_PATH=/home/node/.cache/ms-playwright
 RUN node /app/node_modules/playwright-core/cli.js install chromium
 
+# Set environment variable to ensure OpenClaw uses Playwright browser
+ENV OPENCLAW_BROWSER_MODE=playwright
+
 # Security hardening: Run as non-root user
 # The node:22-bookworm image includes a 'node' user (uid 1000)
 # This reduces the attack surface by preventing container escape via root privileges
