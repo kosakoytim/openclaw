@@ -51,9 +51,6 @@ RUN OPENCLAW_A2UI_SKIP_MISSING=1 pnpm build
 ENV OPENCLAW_PREFER_PNPM=1
 RUN pnpm ui:build
 
-# Install Playwright Chromium browser (using the installed playwright-core from node_modules)
-RUN node node_modules/playwright-core/cli.js install chromium
-
 ENV NODE_ENV=production
 
 # Allow non-root user to write temp files during runtime/tests.
@@ -62,10 +59,19 @@ RUN chown -R node:node /app
 # Create .openclaw directory with correct permissions for volume mounts
 RUN mkdir -p /home/node/.openclaw && chown -R node:node /home/node/.openclaw
 
+# Create playwright cache directory for node user
+RUN mkdir -p /home/node/.cache/ms-playwright && chown -R node:node /home/node/.cache
+
+# Switch to node user before installing Playwright browsers
+USER node
+
+# Install Playwright Chromium browser as node user
+ENV PLAYWRIGHT_BROWSERS_PATH=/home/node/.cache/ms-playwright
+RUN node /app/node_modules/playwright-core/cli.js install chromium
+
 # Security hardening: Run as non-root user
 # The node:22-bookworm image includes a 'node' user (uid 1000)
 # This reduces the attack surface by preventing container escape via root privileges
-USER node
 
 # Start gateway server with default config.
 # Binds to lan (0.0.0.0) for container/VPS deployments.
