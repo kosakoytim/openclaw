@@ -217,7 +217,7 @@ export async function launchOpenClawChrome(
     // Always open a blank tab to ensure a target exists.
     args.push("about:blank");
 
-    return spawn(exe.path, args, {
+    const proc = spawn(exe.path, args, {
       stdio: "pipe",
       env: {
         ...process.env,
@@ -225,6 +225,16 @@ export async function launchOpenClawChrome(
         HOME: os.homedir(),
       },
     });
+
+    // Log Chrome stderr for debugging startup issues
+    proc.stderr.on("data", (data) => {
+      const msg = data.toString().trim();
+      if (msg) {
+        log.debug(`chrome stderr: ${msg}`);
+      }
+    });
+
+    return proc;
   };
 
   const startedAt = Date.now();
@@ -274,6 +284,17 @@ export async function launchOpenClawChrome(
     ensureProfileCleanExit(userDataDir);
   } catch (err) {
     log.warn(`openclaw browser clean-exit prefs failed: ${String(err)}`);
+  }
+
+  // Remove stale SingletonLock file that prevents Chrome from starting
+  const lockFile = path.join(userDataDir, "SingletonLock");
+  try {
+    if (fs.existsSync(lockFile)) {
+      fs.unlinkSync(lockFile);
+      log.debug(`Removed stale SingletonLock file: ${lockFile}`);
+    }
+  } catch (err) {
+    log.warn(`Failed to remove SingletonLock: ${String(err)}`);
   }
 
   const proc = spawnOnce();
