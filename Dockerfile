@@ -67,10 +67,14 @@ USER node
 
 # Install Playwright Chromium browser as node user
 ENV PLAYWRIGHT_BROWSERS_PATH=/home/node/.cache/ms-playwright
-RUN node /app/node_modules/playwright-core/cli.js install chromium
+RUN node /app/node_modules/playwright-core/cli.js install chromium && \
+    # Find the installed Chromium executable and create a symlink in a standard location \
+    CHROMIUM_PATH=$(find /home/node/.cache/ms-playwright -name chrome -type f | head -1) && \
+    mkdir -p /home/node/bin && \
+    ln -s "$CHROMIUM_PATH" /home/node/bin/chromium
 
-# Set environment variable to ensure OpenClaw uses Playwright browser
-ENV OPENCLAW_BROWSER_MODE=playwright
+# Add chromium to PATH so OpenClaw can find it
+ENV PATH="/home/node/bin:${PATH}"
 
 # Security hardening: Run as non-root user
 # The node:22-bookworm image includes a 'node' user (uid 1000)
