@@ -83,6 +83,11 @@ ENV DISPLAY=:99
 
 # Create startup script to launch Xvfb and OpenClaw
 USER root
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gosu && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 RUN echo '#!/bin/bash\n\
 set -e\n\
 # Start Xvfb in the background\n\
@@ -94,13 +99,9 @@ echo "Xvfb started with PID $XVFB_PID"\n\
 sleep 2\n\
 \n\
 # Switch to node user and start OpenClaw\n\
-exec su-exec node node /app/dist/index.js gateway --allow-unconfigured --bind lan\n\
+exec gosu node node /app/dist/index.js gateway --allow-unconfigured --bind lan\n\
 ' > /usr/local/bin/start-openclaw.sh && \
-    chmod +x /usr/local/bin/start-openclaw.sh && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends su-exec && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    chmod +x /usr/local/bin/start-openclaw.sh
 
 # Security hardening: Run as non-root user
 # The node:22-bookworm image includes a 'node' user (uid 1000)
