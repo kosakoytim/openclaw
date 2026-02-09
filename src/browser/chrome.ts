@@ -179,6 +179,23 @@ export async function launchOpenClawChrome(
   const userDataDir = resolveOpenClawUserDataDir(profile.name);
   fs.mkdirSync(userDataDir, { recursive: true });
 
+  // Remove stale Chrome singleton files that prevent Chrome from starting.
+  // These can be left behind when containers are recreated or Chrome crashes.
+  // Must happen BEFORE any Chrome launch attempts.
+  const singletonFiles = ["SingletonLock", "SingletonCookie", "SingletonSocket"];
+  for (const filename of singletonFiles) {
+    const filepath = path.join(userDataDir, filename);
+    try {
+      if (fs.existsSync(filepath)) {
+        const stats = fs.lstatSync(filepath);
+        fs.unlinkSync(filepath);
+        log.debug(`Removed stale ${stats.isSymbolicLink() ? "symlink" : "file"}: ${filename}`);
+      }
+    } catch (err) {
+      log.warn(`Failed to remove ${filename}: ${String(err)}`);
+    }
+  }
+
   const needsDecorate = !isProfileDecorated(
     userDataDir,
     profile.name,
@@ -284,23 +301,6 @@ export async function launchOpenClawChrome(
     ensureProfileCleanExit(userDataDir);
   } catch (err) {
     log.warn(`openclaw browser clean-exit prefs failed: ${String(err)}`);
-  }
-
-  // Remove stale Chrome singleton files that prevent Chrome from starting
-  // These can be left behind when containers are recreated or Chrome crashes
-  const singletonFiles = ["SingletonLock", "SingletonCookie", "SingletonSocket"];
-  for (const filename of singletonFiles) {
-    const filepath = path.join(userDataDir, filename);
-    try {
-      if (fs.existsSync(filepath)) {
-        // Use lstat to detect symlinks, then unlink regardless of type
-        const stats = fs.lstatSync(filepath);
-        fs.unlinkSync(filepath);
-        log.debug(`Removed stale ${stats.isSymbolicLink() ? "symlink" : "file"}: ${filename}`);
-      }
-    } catch (err) {
-      log.warn(`Failed to remove ${filename}: ${String(err)}`);
-    }
   }
 
   const proc = spawnOnce();
