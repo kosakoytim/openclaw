@@ -19,6 +19,8 @@ RUN apt-get update && \
     libasound2 \
     libpango-1.0-0 \
     libcairo2 \
+    xvfb \
+    x11vnc \
     && apt-get clean && \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
@@ -76,13 +78,38 @@ RUN node /app/node_modules/playwright-core/cli.js install chromium && \
 # Add chromium to PATH so OpenClaw can find it
 ENV PATH="/home/node/bin:${PATH}"
 
+# Set DISPLAY for Xvfb (virtual framebuffer for non-headless mode)
+ENV DISPLAY=:99
+
+# Create startup script to launch Xvfb and OpenClaw
+USER root
+RUN echo '#!/bin/bash\n\
+set -e\n\
+# Start Xvfb in the background\n\
+Xvfb :99 -screen 0 1920x1080x24 -ac +extension GLX +render -noreset &\n\
+XVFB_PID=$!\n\
+echo "Xvfb started with PID $XVFB_PID"\n\
+\n\
+# Wait for Xvfb to be ready\n\
+sleep 2\n\
+\n\
+# Switch to node user and start OpenClaw\n\
+exec su-exec node node /app/dist/index.js gateway --allow-unconfigured --bind lan\n\
+' > /usr/local/bin/start-openclaw.sh && \
+    chmod +x /usr/local/bin/start-openclaw.sh && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends su-exec && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 # Security hardening: Run as non-root user
 # The node:22-bookworm image includes a 'node' user (uid 1000)
 # This reduces the attack surface by preventing container escape via root privileges
 
 # Start gateway server with default config.
 # Binds to lan (0.0.0.0) for container/VPS deployments.
+# Xvfb is started first to provide a virtual display for non-headless Chrome.
 #
 # For container platforms requiring external health checks:
 #   1. Set OPENCLAW_GATEWAY_TOKEN or OPENCLAW_GATEWAY_PASSWORD env var
-CMD ["node", "dist/index.js", "gateway", "--allow-unconfigured", "--bind", "lan"]
+CMD ["/usr/local/bin/start-openclaw.sh"]
