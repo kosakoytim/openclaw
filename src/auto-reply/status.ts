@@ -18,14 +18,14 @@ import {
 } from "../config/sessions.js";
 import { resolveCommitHash } from "../infra/git-commit.js";
 import { listPluginCommands } from "../plugins/commands.js";
-import {
-  getTtsMaxLength,
-  getTtsProvider,
-  isSummarizationEnabled,
-  resolveTtsAutoMode,
-  resolveTtsConfig,
-  resolveTtsPrefsPath,
-} from "../tts/tts.js";
+// TTS removed - stub functions
+const getTtsMaxLength = (_cfg?: any, _tts?: any) => undefined;
+const getTtsProvider = (_tts?: any) => undefined;
+const isSummarizationEnabled = (_tts?: any) => false;
+const resolveTtsConfig = (_cfg?: any) => undefined;
+const resolveTtsPrefsPath = (_cfg?: any) => undefined;
+const resolveTtsAutoMode = (_mode?: any) => "off";
+
 import {
   estimateUsageCost,
   formatTokenCount as formatTokenCountShared,

@@ -1,3 +1,13 @@
+// Cron removed - stub
+const buildGatewayCronService = () => ({
+  cron: { stop: () => {} },
+  storePath: "",
+});
+type GatewayCronState = {
+  cron: { stop: () => void };
+  storePath: string;
+};
+const startBrowserControlServerIfEnabled = async () => null;
 import type { CliDeps } from "../cli/deps.js";
 import type { loadConfig } from "../config/config.js";
 import type { HeartbeatRunner } from "../infra/heartbeat-runner.js";
@@ -13,8 +23,6 @@ import {
 import { setCommandLaneConcurrency } from "../process/command-queue.js";
 import { CommandLane } from "../process/lanes.js";
 import { resolveHooksConfig } from "./hooks.js";
-import { startBrowserControlServerIfEnabled } from "./server-browser.js";
-import { buildGatewayCronService, type GatewayCronState } from "./server-cron.js";
 
 type GatewayHotReloadState = {
   hooksConfig: ReturnType<typeof resolveHooksConfig>;

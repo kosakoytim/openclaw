@@ -122,8 +122,8 @@ async function fetchAndFilterContainers(opts: SandboxRecreateOptions): Promise<F
   let browsers = opts.browser ? allBrowsers : [];
 
   if (opts.session) {
-    containers = containers.filter((c) => c.sessionKey === opts.session);
-    browsers = browsers.filter((b) => b.sessionKey === opts.session);
+    containers = containers.filter((c: any) => c.sessionKey === opts.session);
+    browsers = browsers.filter((b: any) => b.sessionKey === opts.session);
   } else if (opts.agent) {
     const matchesAgent = createAgentMatcher(opts.agent);
     containers = containers.filter(matchesAgent);

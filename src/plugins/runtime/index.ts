@@ -130,7 +130,6 @@ import { monitorTelegramProvider } from "../../telegram/monitor.js";
 import { probeTelegram } from "../../telegram/probe.js";
 import { sendMessageTelegram } from "../../telegram/send.js";
 import { resolveTelegramToken } from "../../telegram/token.js";
-import { textToSpeechTelephony } from "../../tts/tts.js";
 import { getActiveWebListener } from "../../web/active-listener.js";
 import {
   getWebAuthAgeMs,
@@ -183,7 +182,7 @@ export function createPluginRuntime(): PluginRuntime {
       resizeToJpeg,
     },
     tts: {
-      textToSpeechTelephony,
+      textToSpeechTelephony: null, // TTS removed
     },
     tools: {
       createMemoryGetTool,

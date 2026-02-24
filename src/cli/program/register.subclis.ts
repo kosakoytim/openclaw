@@ -121,22 +121,6 @@ const entries: SubCliEntry[] = [
     },
   },
   {
-    name: "tui",
-    description: "Terminal UI",
-    register: async (program) => {
-      const mod = await import("../tui-cli.js");
-      mod.registerTuiCli(program);
-    },
-  },
-  {
-    name: "cron",
-    description: "Cron scheduler",
-    register: async (program) => {
-      const mod = await import("../cron-cli.js");
-      mod.registerCronCli(program);
-    },
-  },
-  {
     name: "dns",
     description: "DNS helpers",
     register: async (program) => {

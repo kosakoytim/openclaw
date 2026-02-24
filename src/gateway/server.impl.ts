@@ -1,3 +1,6 @@
+// Removed features - stubs
+const buildGatewayCronService = () => ({ cron: { stop: () => {} }, storePath: "" });
+const startBrowserControlServerIfEnabled = async () => null;
 import type { CanvasHostServer } from "../canvas-host/server.js";
 import type { PluginServicesHandle } from "../plugins/services.js";
 import type { RuntimeEnv } from "../runtime.js";

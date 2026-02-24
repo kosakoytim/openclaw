@@ -4,9 +4,6 @@ import type { AnyAgentTool } from "./tools/common.js";
 import { resolvePluginTools } from "../plugins/tools.js";
 import { resolveSessionAgentId } from "./agent-scope.js";
 import { createAgentsListTool } from "./tools/agents-list-tool.js";
-import { createBrowserTool } from "./tools/browser-tool.js";
-import { createCanvasTool } from "./tools/canvas-tool.js";
-import { createCronTool } from "./tools/cron-tool.js";
 import { createGatewayTool } from "./tools/gateway-tool.js";
 import { createImageTool } from "./tools/image-tool.js";
 import { createMessageTool } from "./tools/message-tool.js";
@@ -16,7 +13,6 @@ import { createSessionsHistoryTool } from "./tools/sessions-history-tool.js";
 import { createSessionsListTool } from "./tools/sessions-list-tool.js";
 import { createSessionsSendTool } from "./tools/sessions-send-tool.js";
 import { createSessionsSpawnTool } from "./tools/sessions-spawn-tool.js";
-import { createTtsTool } from "./tools/tts-tool.js";
 import { createWebFetchTool, createWebSearchTool } from "./tools/web-tools.js";
 
 export function createOpenClawTools(options?: {
@@ -71,17 +67,9 @@ export function createOpenClawTools(options?: {
     sandboxed: options?.sandboxed,
   });
   const tools: AnyAgentTool[] = [
-    createBrowserTool({
-      sandboxBridgeUrl: options?.sandboxBrowserBridgeUrl,
-      allowHostControl: options?.allowHostBrowserControl,
-    }),
-    createCanvasTool(),
     createNodesTool({
       agentSessionKey: options?.agentSessionKey,
       config: options?.config,
-    }),
-    createCronTool({
-      agentSessionKey: options?.agentSessionKey,
     }),
     createMessageTool({
       agentAccountId: options?.agentAccountId,
@@ -93,10 +81,6 @@ export function createOpenClawTools(options?: {
       replyToMode: options?.replyToMode,
       hasRepliedRef: options?.hasRepliedRef,
       sandboxRoot: options?.sandboxRoot,
-    }),
-    createTtsTool({
-      agentChannel: options?.agentChannel,
-      config: options?.config,
     }),
     createGatewayTool({
       agentSessionKey: options?.agentSessionKey,

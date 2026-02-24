@@ -1,8 +1,9 @@
+// TUI removed - stub
+const extractTextFromMessage = () => "";
 import type { ImageContent } from "@mariozechner/pi-ai";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { extractTextFromMessage } from "../../../tui/tui-formatters.js";
 import { resolveUserPath } from "../../../utils.js";
 import { loadWebMedia } from "../../../web/media.js";
 import { assertSandboxPath } from "../../sandbox-paths.js";

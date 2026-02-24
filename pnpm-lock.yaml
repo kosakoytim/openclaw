@@ -54,15 +54,9 @@ importers:
       '@mariozechner/pi-coding-agent':
         specifier: 0.51.1
         version: 0.51.1(ws@8.19.0)(zod@4.3.6)
-      '@mariozechner/pi-tui':
-        specifier: 0.51.1
-        version: 0.51.1
       '@mozilla/readability':
         specifier: ^0.6.0
         version: 0.6.0
-      '@napi-rs/canvas':
-        specifier: ^0.1.89
-        version: 0.1.89
       '@sinclair/typebox':
         specifier: 0.34.47
         version: 0.34.47
@@ -129,9 +123,6 @@ importers:
       markdown-it:
         specifier: ^14.1.0
         version: 14.1.0
-      node-edge-tts:
-        specifier: ^1.2.9
-        version: 1.2.9
       node-llama-cpp:
         specifier: 3.15.1
         version: 3.15.1(typescript@5.9.3)
@@ -141,9 +132,6 @@ importers:
       pdfjs-dist:
         specifier: ^5.4.624
         version: 5.4.624
-      playwright-core:
-        specifier: 1.58.1
-        version: 1.58.1
       proper-lockfile:
         specifier: ^4.1.2
         version: 4.1.2
@@ -4253,10 +4241,6 @@ packages:
     engines: {node: '>=14.18'}
     hasBin: true
 
-  node-edge-tts@1.2.9:
-    resolution: {integrity: sha512-fvfW1dUgJdZAdTniC6MzLTMwnNUFKGKaUdRJ1OsveOYlfnPUETBU973CG89565txvbBowCQ4Czdeu3qSX8bNOg==}
-    hasBin: true
-
   node-fetch@2.7.0:
     resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
     engines: {node: 4.x || >=6.0.0}
@@ -6663,6 +6647,7 @@ snapshots:
       '@napi-rs/canvas-linux-x64-musl': 0.1.89
       '@napi-rs/canvas-win32-arm64-msvc': 0.1.89
       '@napi-rs/canvas-win32-x64-msvc': 0.1.89
+    optional: true
 
   '@napi-rs/wasm-runtime@1.1.1':
     dependencies:
@@ -9643,16 +9628,6 @@ snapshots:
   node-domexception@1.0.0: {}
 
   node-downloader-helper@2.1.10: {}
-
-  node-edge-tts@1.2.9:
-    dependencies:
-      https-proxy-agent: 7.0.6
-      ws: 8.19.0
-      yargs: 17.7.2
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - utf-8-validate
 
   node-fetch@2.7.0:
     dependencies:
